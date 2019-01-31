@@ -6,7 +6,7 @@
 // Description: Solutions to the exercises 
 //          connected to Project 0.
 //
-/////////////////////////////////////////////
+//////////////////////////////////////////
 
 
 public with sharing class Project0Banking {

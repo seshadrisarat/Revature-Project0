@@ -6,7 +6,7 @@
 // Description: Solutions to the exercises 
 //          connected to Project 0.
 //
-///////////////////////////////////////////jdfkljdflkkldkekidlndaskljadfslkadfskl
+//////////////////////////////////////////
 
 
 public with sharing class ApexP0Exercises {
