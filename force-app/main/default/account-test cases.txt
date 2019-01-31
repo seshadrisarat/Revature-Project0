@@ -1,0 +1,17 @@
+
+
+//Create a Checking Account for JD and a Joint Savings Account for him and Eliot.
+//Check overdrawn will auto-run after newAccount completes
+
+Project0Banking.newAccount('JD','Checking','1','1',50.00);
+Project0Banking.newAccount('JD and Eliot','JD','Eliot Reid','Savings','1','1',100.00);
+
+
+
+//Another customer, Evan wants to make a withdrawal.
+
+
+Project0Banking.newTransaction('A-00000019','Withdrawal',2000.00);
+
+
+//newTransaction autoruns updateAccount, which autoruns checkOverdrawn
