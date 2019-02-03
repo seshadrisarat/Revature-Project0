@@ -13,24 +13,25 @@ public with sharing class Project0Banking {
 
     private static final String singleID = '0121U000000htsSQAQ';
     private static final String jointID = '0121U000000htsXQAQ';
+    public static final ID evanID = '0011U00000Ayo6hQAB';
 
-    public static void newTransaction(String ref, String type, Decimal amount){
+    public static void newTransaction(ID aID, String type, Decimal amount){
 
-        Account a = [SELECT id, name FROM Account WHERE AccountRefNumber__c = :ref];
+        Account a = [SELECT id, name FROM Account WHERE id = :aID];
 
         Transaction__c t = new Transaction__c(Name = a.Name + ' ' + type + ' of $' + amount,
                                               Amount__c = amount,
                                               Type__c = type,
                                               Account__c = a.id);
         insert t;
-        updateAccount(ref);
+        updateAccount(aID);
     }
 
-    public static void updateAccount(String ref){
+    public static void updateAccount(ID aID){
         List<Transaction__c> trans = new List<Transaction__c>();
         double total = 0.0;
 
-        for (Transaction__c t: [SELECT id, Type__c, Amount__c FROM Transaction__c WHERE Account__r.AccountRefNumber__c = :ref ]){
+        for (Transaction__c t: [SELECT id, Type__c, Amount__c FROM Transaction__c WHERE Account__r.id = :aID ]){
             if (t.Type__c == 'Deposit'){
                 total = total + t.Amount__c;
             }
@@ -41,7 +42,7 @@ public with sharing class Project0Banking {
         }
 
         
-        Account acc = [SELECT id, name, AccountBalance__c, InitialBalance__c FROM Account WHERE Account.AccountRefNumber__c = :ref];
+        Account acc = [SELECT id, name, AccountBalance__c, InitialBalance__c FROM Account WHERE Account.ID = :aID];
         acc.AccountBalance__c = total + acc.InitialBalance__c;
 
         update trans;
