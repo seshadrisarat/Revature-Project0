@@ -1,10 +1,10 @@
 //////////////////////////////////////////
 //
-// ApexP0Exercises
+// Project 0 - Banking
 // Created By: Ian Blanchard
 // Date: 30 Jan 2019
-// Description: Solutions to the exercises 
-//          connected to Project 0.
+// Description: Methods that interact with the Banking 
+//          Data Model/Org made for Project 0.
 //
 //////////////////////////////////////////
 
