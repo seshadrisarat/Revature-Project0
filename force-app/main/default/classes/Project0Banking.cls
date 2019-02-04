@@ -1,6 +1,6 @@
 //////////////////////////////////////////
 //
-// Project 0 - Banking
+// Project0Banking Class
 // Created By: Ian Blanchard
 // Date: 30 Jan 2019
 // Description: Methods that interact with the Banking 
@@ -11,31 +11,55 @@
 
 public with sharing class Project0Banking {
 
-    private static final String singleID = '0121U000000htsSQAQ';
-    private static final String jointID = '0121U000000htsXQAQ';
+    //Constants for recordtype ID's, Account.status strings, and Transaction.Type strings
+    private static final String SINGLE_ID = '0121U000000htsSQAQ';
+    private static final String JOINT_ID = '0121U000000htsXQAQ';
+    private static final String OVERDRAWN = 'Overdrawn';
+    private static final String GOOD_STANDING = 'In Good Standing';
+    private static final String DEPOSIT = 'Deposit';
+    private static final String WITHDRAW = 'Withdrawal';
+
+    //Account ID for an Account. Used for testing/demo
     public static final ID evanID = '0011U00000Ayo6hQAB';
 
-    public static void newTransaction(ID aID, String type, Decimal amount){
+    /* newTransaction(ID,String,Decimal)
+     * Takes in an Account ID, a String representing Deposit or Withdrawal, and a Decimal dollar amount.
+     * Creates and inserts a new Transaction to the Org for the Account
+     * Upon completion, executes the updateAccount method
+     */
 
+    public static void newTransaction(ID aID, String type, Decimal amount){
+        //SOQL query to pull the account associated with the ID passed in the parameters
         Account a = [SELECT id, name FROM Account WHERE id = :aID];
 
+        //Create a new Transaction sObject associated with that account
         Transaction__c t = new Transaction__c(Name = a.Name + ' ' + type + ' of $' + amount,
                                               Amount__c = amount,
                                               Type__c = type,
                                               Account__c = a.id);
+
+        //add the Transaction to the Org
         insert t;
+
+        //Run the updateAccount method on the account
         updateAccount(aID);
     }
+
+    /* updateAccount(ID)
+     * Takes in an Account ID and verifies the Account balance by recalculating the Transactions
+     * attached to the account.
+     * Upon completion, runs the checkOverdrawn method
+     */
 
     public static void updateAccount(ID aID){
         List<Transaction__c> trans = new List<Transaction__c>();
         double total = 0.0;
 
         for (Transaction__c t: [SELECT id, Type__c, Amount__c FROM Transaction__c WHERE Account__r.id = :aID ]){
-            if (t.Type__c == 'Deposit'){
+            if (t.Type__c == DEPOSIT){
                 total = total + t.Amount__c;
             }
-            if (t.Type__c == 'Withdrawal'){
+            if (t.Type__c == WITHDRAW){
                 total = total - t.Amount__c;
             }
             trans.add(t);
@@ -54,15 +78,24 @@ public with sharing class Project0Banking {
         checkOverdrawn();
     }
 
+    /* checkOverdrawn()
+     * Takes in no parameters. Checks all accounts balances, if they are negative or non-negative and sets the Account.Status
+     * to Overdrawn or In Good Standing, respectively
+     */
+
     public static void checkOverdrawn(){
+        //Create a List of Accounts to receive accounts from SOQL call
         List<Account> accounts = new List<Account>();
 
+        //SOQL query for all accounts
         for (Account a: [SELECT id, AccountBalance__c, Status__c FROM Account]){
+            //If account balance is negative, set status to Overdrawn
             if (a.AccountBalance__c < 0){
-                a.Status__c = 'Overdrawn';
+                a.Status__c = OVERDRAWN;
             }
+            //If account balance is zero or positive, set status to In Good Standing
             if (a.AccountBalance__c >= 0){
-                a.Status__c = 'In Good Standing';
+                a.Status__c = GOOD_STANDING;
             }
             accounts.add(a);
         }
@@ -70,20 +103,41 @@ public with sharing class Project0Banking {
         update accounts;
     }
 
+    /* newAccount(String,String,String,String,Decimal)
+     * Overloaded method.
+     * Takes in a name, type, routing number, account number, and currency amount and creates and 
+     * inserts a new Account record  with RecordType SINGLE with those values.
+     * Upon completion, runs the checkOverdrawn method.
+     */
+
     public static void newAccount(String aName,String aType, String rNum, String aNum, Decimal aBal){
+
+        //Creates an Account sObject with the values from the method parameters and RecordType SINGLE
         Account a = new Account(Name = aName,
                                 Type = aType,
                                 RoutingNumber__c = rNum,
                                 AccountNumber = aNum,
                                 AccountBalance__c = aBal,
                                 InitialBalance__c = aBal,
-                                RecordTypeID = singleID);
-        
+                                RecordTypeID = SINGLE_ID);
+
+        //Insert account to the Org
         insert a;
+
+        //Run checkOverdrawn method to set Account.status
         checkOverdrawn();
     }
 
+    /* newAccount(String,String,String,String,String,String,Decimal)
+     * Overloaded method.
+     * Takes in a name, type, routing number, account number, and currency amount and creates and 
+     * inserts a new Account record  with RecordType JOINT with those values.
+     * Upon completion, runs the checkOverdrawn method.
+     */
+
     public static void newAccount(String aName, String primary, String secondary, String aType, String rNum, String aNum, Decimal aBal){
+        
+        //Creates anAccount sObject with the values from the method parameters and RecordType JOINT
         Account a = new Account(Name = aName,
                                 AccountHolder1__c = primary,
                                 AccountHolder2__c = secondary,
@@ -92,8 +146,12 @@ public with sharing class Project0Banking {
                                 AccountNumber = aNum,
                                 AccountBalance__c = aBal,
                                 InitialBalance__c = aBal,
-                                RecordTypeID = jointID);
+                                RecordTypeID = JOINT_ID);
+
+        //Insert account to the Org
         insert a;
+
+        //Run checkOverdrawn method to set Account.status
         checkOverdrawn();
     }
 }

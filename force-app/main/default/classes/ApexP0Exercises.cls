@@ -1,13 +1,12 @@
 //////////////////////////////////////////
 //
-// ApexP0Exercises
+// ApexP0Exercises Class
 // Created By: Ian Blanchard
 // Date: 30 Jan 2019
 // Description: Solutions to the exercises 
 //          connected to Project 0.
 //
 //////////////////////////////////////////
-//MASTER
 
 public with sharing class ApexP0Exercises {
 
