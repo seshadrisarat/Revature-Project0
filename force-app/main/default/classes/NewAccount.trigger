@@ -4,7 +4,7 @@
 // Created By: Ian Blanchard
 // Date: 2 Feb 2019
 // Description: Trigger for New Account creation
-//
+// Rename
 //////////////////////////////////////////
 
 trigger NewAccount on Account (after insert) {
