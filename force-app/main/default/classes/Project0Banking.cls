@@ -43,7 +43,11 @@ public with sharing class Project0Banking {
 
         
         Account acc = [SELECT id, name, AccountBalance__c, InitialBalance__c FROM Account WHERE Account.ID = :aID];
-        acc.AccountBalance__c = total + acc.InitialBalance__c;
+        if (acc.InitialBalance__c != null)
+            acc.AccountBalance__c = total + acc.InitialBalance__c;
+        else
+            acc.AccountBalance__c = total + acc.AccountBalance__c;
+        
 
         update trans;
         update acc;
