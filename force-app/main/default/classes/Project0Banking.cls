@@ -52,29 +52,47 @@ public with sharing class Project0Banking {
      */
 
     public static void updateAccount(ID aID){
+
+        //Create a list of transactions, and a counter double variable to keep track of the running total for transaction amounts
         List<Transaction__c> trans = new List<Transaction__c>();
         double total = 0.0;
 
+        //loop through all transactions tied to the account
         for (Transaction__c t: [SELECT id, Type__c, Amount__c FROM Transaction__c WHERE Account__r.id = :aID ]){
+            //if the transaction is a deposit, add the amount to the total
             if (t.Type__c == DEPOSIT){
                 total = total + t.Amount__c;
             }
+
+            //if the transaction is a withdrawal, subtract the amount from the total
             if (t.Type__c == WITHDRAW){
                 total = total - t.Amount__c;
             }
+
+            //add the transaction to the list to be updated later
             trans.add(t);
         }
 
-        
+        //create an account sobject and query for the account from the method parameters
         Account acc = [SELECT id, name, AccountBalance__c, InitialBalance__c FROM Account WHERE Account.ID = :aID];
+        
+        //if the initial balance exists, set account balance to the total found above plus the initial balance
         if (acc.InitialBalance__c != null)
             acc.AccountBalance__c = total + acc.InitialBalance__c;
+
+        /*the initial balance will be null if and only if this method was called by the NewAccount trigger
+         *this else statement will account for this situation by using the current value of the AccountBalance__c
+         *field instead
+         */
         else
             acc.AccountBalance__c = total + acc.AccountBalance__c;
         
 
+        //update transactions and the account on the org
         update trans;
         update acc;
+
+        //run checkOverdrawn method
         checkOverdrawn();
     }
 
@@ -97,9 +115,11 @@ public with sharing class Project0Banking {
             if (a.AccountBalance__c >= 0){
                 a.Status__c = GOOD_STANDING;
             }
+            //Add account to the list
             accounts.add(a);
         }
 
+        //Update all accounts in the list on the org
         update accounts;
     }
 
