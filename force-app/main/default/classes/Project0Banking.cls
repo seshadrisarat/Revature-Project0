@@ -74,18 +74,10 @@ public with sharing class Project0Banking {
         }
 
         //create an account sobject and query for the account from the method parameters
-        Account acc = [SELECT id, name, AccountBalance__c, InitialBalance__c FROM Account WHERE Account.ID = :aID];
+        Account acc = [SELECT id, name, AccountBalance__c FROM Account WHERE Account.ID = :aID];
         
-        //if the initial balance exists, set account balance to the total found above plus the initial balance
-        if (acc.InitialBalance__c != null)
-            acc.AccountBalance__c = total + acc.InitialBalance__c;
-
-        /*the initial balance will be null if and only if this method was called by the NewAccount trigger
-         *this else statement will account for this situation by using the current value of the AccountBalance__c
-         *field instead
-         */
-        else
-            acc.AccountBalance__c = total + acc.AccountBalance__c;
+        //Set the account balance to the total of all transactions as calculated
+        acc.AccountBalance__c = total;
         
 
         //update transactions and the account on the org
@@ -138,7 +130,6 @@ public with sharing class Project0Banking {
                                 RoutingNumber__c = rNum,
                                 AccountNumber = aNum,
                                 AccountBalance__c = aBal,
-                                InitialBalance__c = aBal,
                                 RecordTypeID = SINGLE_ID);
 
         //Insert account to the Org
@@ -165,7 +156,6 @@ public with sharing class Project0Banking {
                                 RoutingNumber__c = rNum,
                                 AccountNumber = aNum,
                                 AccountBalance__c = aBal,
-                                InitialBalance__c = aBal,
                                 RecordTypeID = JOINT_ID);
 
         //Insert account to the Org
