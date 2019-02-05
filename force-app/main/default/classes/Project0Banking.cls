@@ -12,12 +12,12 @@
 public with sharing class Project0Banking {
 
     //Constants for recordtype ID's, Account.status strings, and Transaction.Type strings
-    private static final String SINGLE_ID = '0121U000000htsSQAQ';
-    private static final String JOINT_ID = '0121U000000htsXQAQ';
-    private static final String OVERDRAWN = 'Overdrawn';
-    private static final String GOOD_STANDING = 'In Good Standing';
-    private static final String DEPOSIT = 'Deposit';
-    private static final String WITHDRAW = 'Withdrawal';
+    public static final String SINGLE_ID = '0121U000000htsSQAQ';
+    public static final String JOINT_ID = '0121U000000htsXQAQ';
+    public static final String OVERDRAWN = 'Overdrawn';
+    public static final String GOOD_STANDING = 'In Good Standing';
+    public static final String DEPOSIT = 'Deposit';
+    public static final String WITHDRAW = 'Withdrawal';
 
     //Account ID for an Account. Used for testing/demo
     public static final ID evanID = '0011U00000Ayo6hQAB';
