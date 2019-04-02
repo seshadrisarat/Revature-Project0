@@ -26,6 +26,28 @@
     </types>
     <types>
         <members>*</members>
+        <name>CustomObject</name>
+    </types>
+    <types>
+        <members>Loan_Approved</members>
+        <name>Flow</name>
+    </types>
+    <types>
+        <members>Account.AccountBalance__c</members>
+        <members>Account.AccountHolder1__c</members>
+        <members>Account.AccountHolder2__c</members>
+        <members>Account.Active__c</members>
+        <members>Account.CardNumber__c</members>
+        <members>Account.RoutingNumber__c</members>
+        <members>Account.Status__c</members>
+        <name>CustomField</name>
+    </types>
+    <types>
+        <members>Banking</members>
+        <name>CustomApplication</name>
+    </types>
+    <types>
+        <members>*</members>
         <name>StaticResource</name>
     </types>
     <version>44.0</version>
